@@ -1,0 +1,57 @@
+DATASET: 'Mid360Dataset'
+# DATA_PATH is the repository root that contains data/derived/... — set PER ENVIRONMENT:
+#   laptop : <your local repo root>
+#   Colab  : /content/perception   (or wherever the bundle is unpacked)
+DATA_PATH: '/PATH/TO/perception'
+
+# Frame list + label↔bin pairing (relative to DATA_PATH).
+MANIFEST: 'data/derived/labels_openpcdet/MANIFEST_pairing.json'
+
+POINT_CLOUD_RANGE: [-40.96, -40.96, -0.5, 40.96, 40.96, 3.0]
+
+# Overfit run on all 48 frames: no held-out split (train == test set).
+DATA_SPLIT: {
+    'train': train,
+    'test': train
+}
+
+POINT_FEATURE_ENCODING: {
+    encoding_type: absolute_coordinates_encoding,
+    used_feature_list: ['x', 'y', 'z', 'intensity'],
+    src_feature_list: ['x', 'y', 'z', 'intensity'],
+}
+
+DATA_AUGMENTOR:
+    DISABLE_AUG_LIST: ['placeholder']
+    AUG_CONFIG_LIST:
+        # gt_sampling OMITTED for this first run (no gt_database / dbinfos dependency).
+        - NAME: random_world_flip
+          ALONG_AXIS_LIST: ['x']
+
+        - NAME: random_world_rotation
+          WORLD_ROT_ANGLE: [-0.78539816, 0.78539816]
+
+        - NAME: random_world_scaling
+          WORLD_SCALE_RANGE: [0.95, 1.05]
+
+DATA_PROCESSOR:
+    - NAME: mask_points_and_boxes_outside_range
+      REMOVE_OUTSIDE_BOXES: True
+
+    - NAME: shuffle_points
+      SHUFFLE_ENABLED: {
+        'train': True,
+        'test': False
+      }
+
+    - NAME: transform_points_to_voxels
+      VOXEL_SIZE: [0.16, 0.16, 3.5]
+      MAX_POINTS_PER_VOXEL: 32
+      MAX_NUMBER_OF_VOXELS: {
+        'train': 16000,
+        'test': 40000
+      }
+
+# Note: CLASS_NAMES ['Car','Pedestrian','Cyclist'] (3-class head) are declared in the
+# POINTPILLAR MODEL cfg that references this dataset cfg, per OpenPCDet convention.
+# Our data has Car+Pedestrian only; Cyclist stays in the head, simply unused.

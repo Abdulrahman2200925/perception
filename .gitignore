@@ -1,0 +1,30 @@
+# --- private internal docs (all audits/specs/manuals) ---
+docs/
+
+# --- datasets: bags, clouds, labels, manifests (live on Google Drive) ---
+data/
+archive/
+
+# --- model weights & build artifacts ---
+checkpoints/
+export/
+*.pth
+*.onnx
+*.plan
+*.trt
+*.bin
+*.pcd
+
+# --- third-party repos & tools (not part of our repo) ---
+upstream/
+tools/SUSTechPOINTS/
+
+# --- python caches / backups / editor / local settings ---
+**/__pycache__/
+*.pyc
+*.orig.*
+.vscode/
+.claude/
+.venv/
+venv/
+env/

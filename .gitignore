@@ -15,6 +15,9 @@ export/
 *.bin
 *.pcd
 
+# --- data bundles (live on Google Drive, never tracked) ---
+*.zip
+
 # --- third-party repos & tools (not part of our repo) ---
 upstream/
 tools/SUSTechPOINTS/
